@@ -20,24 +20,27 @@ stages {
             }
         }  
         
-        stage('Get latest commit') {
+        stage('Install mocha'){
             steps {
-                bat '''
-                   export COMMIT=$(git log --oneline | awk '{print $1}' | head -n 1)
-                   echo $COMMIT
-                   '''
+                bat 'npm i mocha'
+                
             }
         }
-                                                                                      
-            
-             stage('Deploy') {
+       
+       stage('Tests'){
             steps {
-                bat 'curl -X https://api.render.com/deploy/srv-cg2c62vdvk4ronoipspg?key=P2K1-_KxG9s&ref=$704b1ea'
+                bat 'npm run test'
+                
             }
-        }   
-             
-                                                                                                 
-                 stage('End') {
+        }
+        
+        stage('Deploy') {
+            steps {
+                bat 'curl -X POST https://api.render.com/deploy/srv-cg2c62vdvk4ronoipspg?key=P2K1-_KxG9s'
+            }
+        }
+       
+    stage('End') {
             steps {
                 echo 'Build is finished'
        
